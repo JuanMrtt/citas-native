@@ -1,8 +1,9 @@
 import React, { useState } from 'react'
-import { StyleSheet, Text, View, TextInput, Button, TouchableHighlight } from 'react-native'
+import { StyleSheet, Text, View, TextInput, Button, TouchableHighlight, Alert, ScrollView } from 'react-native'
 import DateTimePickerModal from "react-native-modal-datetime-picker";
+import shortid from 'shortid'
 
-const Formulario = () => {
+const Formulario = ({ citas, setCitas, guardarMostrarForm }) => {
 
     const [paciente, guardarPaciente] = useState('')
     const [propietario, guardarPropietario] = useState('')
@@ -14,6 +15,7 @@ const Formulario = () => {
     const [isDatePickerVisible, setDatePickerVisibility] = useState(false);
     const [isTimePickerVisible, setTimePickerVisibility] = useState(false);
 
+    // Fecha
     const showDatePicker = () => {
         setDatePickerVisibility(true);
     };
@@ -28,6 +30,7 @@ const Formulario = () => {
         hideDatePicker();
     };
 
+    // Hora
     const showTimePicker = () => {
         setTimePickerVisibility(true);
     };
@@ -43,18 +46,42 @@ const Formulario = () => {
     };
 
     const crearNuevaCita = () => {
-        // validar
 
+        // validar
         if (paciente.trim() === '' || propietario.trim() === '' || telefono.trim() === '' || fecha.trim() === '' || hora.trim() === '' || sintomas.trim() === '') {
-            console.log('fallaste burlancaster')
+            mostrarAlerta()
             return
         }
+
+        // Crear nueva cita
+        const cita = { paciente, propietario, telefono, fecha, hora, sintomas }
+        cita.id = shortid.generate()
+        console.log(cita)
+
+        // Agregar al state
+        const citasNuevo = [...citas, cita]
+        setCitas(citasNuevo)
+
+        // Ocultar el formulario
+        guardarMostrarForm(false)
+
+        // Resetar el formulario
+
     }
 
-
+    // Muestra la alerta
+    const mostrarAlerta = () => {
+        Alert.alert(
+            'Error', // Titulo
+            'Todos los campos son obligatorios', // Mensaje
+            [{
+                text: 'OK' // Array de botones
+            }]
+        )
+    }
     return (
         <>
-            <View style={styles.formulario}>
+            <ScrollView style={styles.formulario}>
                 <View>
                     <Text style={styles.label}>Paciente:</Text>
                     <TextInput
@@ -118,13 +145,12 @@ const Formulario = () => {
                         multiline
                         style={styles.input}
                         onChangeText={(texto) => guardarSintomas(texto)}
-                        keyboardType='numeric'
                     />
                 </View>
                 <TouchableHighlight onPress={() => crearNuevaCita()} style={styles.btnSubmit}>
                     <Text style={styles.textSubmit}>Crear nueva cita </Text>
                 </TouchableHighlight>
-            </View>
+            </ScrollView>
         </>
     )
 }

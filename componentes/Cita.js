@@ -4,10 +4,9 @@ import { StyleSheet, Text, View, TouchableHighlight } from 'react-native';
 const Cita = ({ item, eliminarPaciente }) => {
 
     const dialogoEliminar = id => {
-        console.log('eliminando', id)
-
         eliminarPaciente(id)
     }
+
     return (
         <View style={styles.container}>
             <View>
@@ -50,7 +49,6 @@ const styles = StyleSheet.create({
     },
     texto: {
         fontSize: 18,
-
     },
     btnEliminar: {
         padding: 10,
